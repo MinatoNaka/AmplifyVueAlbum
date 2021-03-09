@@ -10,6 +10,11 @@
       "StackName": "amplify-amplifyvuealbum-dev-74428",
       "StackId": "arn:aws:cloudformation:us-east-1:750901104108:stack/amplify-amplifyvuealbum-dev-74428/dfa65d30-76f1-11eb-827d-0e2bba40f027",
       "AmplifyAppId": "d3lf6fc7qqkm7x"
+    },
+    "categories": {
+      "auth": {
+        "amplifyvuealbum921b97fd": {}
+      }
     }
   }
 }
