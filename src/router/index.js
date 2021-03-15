@@ -22,29 +22,34 @@ const routes = [
     path: "/albums",
     name: "AlbumIndex",
     component: AlbumIndex,
+    meta: { requireAuth: true },
   },
   {
     path: "/albums/create",
     name: "AlbumCreate",
     component: AlbumCreate,
+    meta: { requireAuth: true },
   },
   {
     path: "/albums/:albumId/edit",
     name: "AlbumEdit",
     component: AlbumEdit,
     props: true,
+    meta: { requireAuth: true },
   },
   {
     path: "/albums/:albumId",
     name: "AlbumShow",
     component: AlbumShow,
     props: true,
+    meta: { requireAuth: true },
   },
   {
     path: "/albums/:albumId/photo/create",
     name: "PhotoCreate",
     component: PhotoCreate,
     props: true,
+    meta: { requireAuth: true },
   },
 ];
 
@@ -68,9 +73,19 @@ function getAuthenticatedUser() {
     });
 }
 
-router.beforeResolve(async (to, from, next) => {
-  await getAuthenticatedUser();
+let user;
 
+router.beforeResolve(async (to, from, next) => {
+  console.log("beforeResolve");
+  user = await getAuthenticatedUser();
+
+  if (to.name === "SignIn" && user) {
+    return next({ name: "AlbumIndex" });
+  }
+
+  if (to.matched.some((record) => record.meta.requireAuth) && !user) {
+    return next({ name: "SignIn" });
+  }
   return next();
 });
 
