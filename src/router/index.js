@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store/index.js";
 import Auth from "@aws-amplify/auth";
+import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import SignIn from "../views/SignIn.vue";
 import AlbumIndex from "../views/album/Index.vue";
 import AlbumCreate from "../views/album/Create.vue";
@@ -87,6 +88,15 @@ router.beforeResolve(async (to, from, next) => {
     return next({ name: "SignIn" });
   }
   return next();
+});
+
+onAuthUIStateChange((authState, authData) => {
+  if (authState === AuthState.SignedIn && authData) {
+    router.push({ name: "AlbumIndex" });
+  }
+  if (authState === AuthState.SignedOut) {
+    router.push({ name: "SignIn" });
+  }
 });
 
 export default router;
