@@ -1,5 +1,15 @@
-type Todo @model {
+type Album @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   name: String!
-  description: String
+  photos: [Photo] @connection(keyName: "byAlbum", fields: ["id"])
+}
+
+type Photo
+  @model
+  @auth(rules: [{ allow: owner }])
+  @key(name: "byAlbum", fields: ["albumID"]) {
+  id: ID!
+  name: String!
+  albumID: ID!
+  album: Album @connection(fields: ["albumID"])
 }
