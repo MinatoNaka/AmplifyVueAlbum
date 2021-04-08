@@ -10,6 +10,7 @@ export const getAlbum = /* GraphQL */ `
         items {
           id
           name
+          s3key
           albumID
           createdAt
           updatedAt
@@ -49,6 +50,7 @@ export const getPhoto = /* GraphQL */ `
     getPhoto(id: $id) {
       id
       name
+      s3key
       albumID
       album {
         id
@@ -76,6 +78,7 @@ export const listPhotos = /* GraphQL */ `
       items {
         id
         name
+        s3key
         albumID
         album {
           id
