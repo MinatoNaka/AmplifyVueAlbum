@@ -10,6 +10,7 @@ type Photo
   @key(name: "byAlbum", fields: ["albumID"]) {
   id: ID!
   name: String!
+  s3key: String!
   albumID: ID!
   album: Album @connection(fields: ["albumID"])
 }
