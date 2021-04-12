@@ -4,7 +4,8 @@
     <form @submit.prevent="submitCreate">
       <label>Name</label><br />
       <input v-model="form.name" placeholder="Enter photo name" /><br />
-      <p>ここに画像登録フォーム</p>
+      <label>Photo</label><br />
+      <input type="file" @change="onFileChange" /><br />
       <input type="submit" value="Submit" />
     </form>
   </div>
@@ -13,6 +14,7 @@
 <script>
 import { API } from "aws-amplify";
 import { createPhoto } from "../../graphql/mutations";
+import { Storage } from "aws-amplify";
 
 export default {
   name: "PhotoCreate",
@@ -24,11 +26,28 @@ export default {
       form: {
         albumID: this.albumId,
         name: "",
+        s3key: "",
       },
+      image: null,
     };
   },
   methods: {
+    onFileChange(e) {
+      this.image = e.target.files[0];
+    },
     async submitCreate() {
+      const s3key = new Date().getTime().toString(16) + this.image.name;
+
+      await Storage.put(s3key, this.image, {
+        level: "private",
+      })
+        .then((result) => {
+          this.form.s3key = result.key;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       await API.graphql({
         query: createPhoto,
         variables: { input: this.form },
